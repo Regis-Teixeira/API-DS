@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "lZAdT1SpjVA7J6VB8CwR23C7v6DyI7Qbf0DklBbDIpIJlB93oCzhzGdJesSjRJjjSzm1+VEHnXnusEcfXd/+UA==",
+  "dgSpecHash": "BXfyp1hUvEPuR0c5m6E7h1JCPXzPKOn1fDZQMVfA/7KUPvWXi55QDSOWKd7Fg9RyafEsMCA7b/5i0VFGJBzjnQ==",
   "success": true,
-  "projectFilePath": "D:\\Régis\\RpgApi\\RpgApi.csproj",
+  "projectFilePath": "C:\\Users\\Aluno\\API-DS\\RpgApi.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Aluno\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",
     "C:\\Users\\Aluno\\.nuget\\packages\\microsoft.csharp\\4.7.0\\microsoft.csharp.4.7.0.nupkg.sha512",
