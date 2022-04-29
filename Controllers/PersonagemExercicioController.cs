@@ -4,10 +4,12 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using RpgApi.Models;
 using RpgApi.Models.Enuns;
+using Microsoft.AspNetCore.Authorization;
 
 namespace RpgApi.Controllers
 {
 
+    [Authorize]
     [ApiController]
     [Route("[Controller]")]
     public class PersonagemExercicioController : ControllerBase
