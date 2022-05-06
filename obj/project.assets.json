@@ -5491,11 +5491,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Aluno\\API-DS\\RpgApi.csproj",
+      "projectUniqueName": "D:\\Régis\\API-DS\\RpgApi.csproj",
       "projectName": "RpgApi",
-      "projectPath": "C:\\Users\\Aluno\\API-DS\\RpgApi.csproj",
+      "projectPath": "D:\\Régis\\API-DS\\RpgApi.csproj",
       "packagesPath": "C:\\Users\\Aluno\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Aluno\\API-DS\\obj\\",
+      "outputPath": "D:\\Régis\\API-DS\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\",

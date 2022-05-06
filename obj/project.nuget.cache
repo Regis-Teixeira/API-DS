@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "WattqK1ccteZPkx3yBJsyhh8ItpJQ98sdlxnkPLvOYeG7YYrI0HVoOi3luIkskWwv6mMHfmLROTQk105CELB2A==",
+  "dgSpecHash": "5bEbLfp284INZ637VBVtxLleJ0Ue02P44e+XUuv5DMvzkG17WY+E6Xs32sOOvT96YnY1ewYapDCAz0eLMZxSig==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Aluno\\API-DS\\RpgApi.csproj",
+  "projectFilePath": "D:\\Régis\\API-DS\\RpgApi.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Aluno\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",
     "C:\\Users\\Aluno\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\5.0.15\\microsoft.aspnetcore.authentication.jwtbearer.5.0.15.nupkg.sha512",
