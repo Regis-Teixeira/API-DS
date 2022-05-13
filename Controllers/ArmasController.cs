@@ -4,18 +4,28 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RpgApi.Data;
 using RpgApi.Models;
+using Microsoft.AspNetCore.Http;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization; 
 
 namespace RpgApi.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class ArmasController : ControllerBase
     {
         private readonly DataContext _context;//Declaração contexto do Banco
+        private readonly IHttpContextAccessor _httpContextoAccessor;
 
-        public ArmasController(DataContext context)
+        public ArmasController(DataContext context, IHttpContextAccessor httpContextAccessor)
         {
             _context = context; //inicialização do contexto do banco
+            _httpContextoAccessor = httpContextAccessor;
+        }
+        private int ObterUsuarioId()
+        {
+            return int.Parse(_httpContextoAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
         }
 
         [HttpGet("{id}")] //Buscar pelo id
@@ -60,6 +70,18 @@ namespace RpgApi.Controllers
                 {
                     throw new System.Exception("O dano da arma não pode ser 0");
                 }
+
+                Personagem personagem = await _context.Personagens
+                                        .FirstOrDefaultAsync(p => p.Id == novaArma.PersonagemId);
+                                    
+                if (personagem == null)
+                    throw new System.Exception("Seu usuário não contém personagens com o Id do Personagem informado");
+
+                Arma buscaArma = await _context.Armas
+                    .FirstOrDefaultAsync(a => a.PersonagemId == novaArma.PersonagemId);
+
+                if (buscaArma != null)
+                    throw new System.Exception("O Personagem selecionado já contém uma arma atribuída a ele.");
 
                 await _context.Armas.AddAsync(novaArma);
                 await _context.SaveChangesAsync();
