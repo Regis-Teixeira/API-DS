@@ -62,5 +62,57 @@ namespace RpgApi.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpPost("Habilidade")]
+        public async Task<IActionResult> AtaqueComHabilidadeAsync(Disputa d)
+        {
+            try
+            {
+                Personagem atacante = await _context.Personagens
+                .Include(p => p.PersonagemHabilidades).ThenInclude(ph => ph.Habilidade)
+                .FirstOrDefaultAsync(p => p.Id == d.AtacanteId);
+
+                Personagem oponente = await _context.Personagens
+                    .FirstOrDefaultAsync(p => p.Id == d.OponenteId);
+
+                PersonagemHabilidade ph = await _context.PersonagemHabilidades
+                    .Include(ph => ph.Habilidade)
+                    .FirstOrDefaultAsync(phBusca => phBusca.HabilidadeId == d.HabilidadeId);
+                if (ph == null)
+                    d.Narracao = $"{atacante.Nome} não possui esta habilidade";
+                else
+                {
+                    int dano = ph.Habilidade.Dano + (new Random().Next(atacante.Inteligencia));
+                    dano = dano - new Random().Next(oponente.Defesa);
+
+                    if (dano > 0)
+                        oponente.PontosVida = oponente.PontosVida - dano;
+                    if (oponente.PontosVida <= 0)
+                        d.Narracao += $"{oponente.Nome} foi derrotado!";
+
+                    _context.Personagens.Update(oponente);
+                    await _context.SaveChangesAsync();
+
+                    StringBuilder dados = new StringBuilder();
+                    dados.AppendFormat($" Atacante: {atacante.Nome}");
+                    dados.AppendFormat($" Oponente: {oponente.Nome}");
+                    dados.AppendFormat($" Pontos de vida do atacante: {atacante.PontosVida}");
+                    dados.AppendFormat($" Pontos de vida do oponente: {oponente.PontosVida}");
+                    dados.AppendFormat($" Arma utilizada: {atacante.Arma.Nome}");
+                    dados.AppendFormat($" Dano: {dano}");
+
+                    d.Narracao += dados.ToString();
+                    d.DataDisputa = DateTime.Now;
+                    _context.Disputas.Add(d);
+                    _context.SaveChanges();
+                }
+
+                return Ok(d);
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }
