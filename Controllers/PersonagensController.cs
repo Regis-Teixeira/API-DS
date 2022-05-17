@@ -11,7 +11,7 @@ using RpgApi.Data;
 using RpgApi.Models;
 
 namespace RpgApi.Controllers
-{   
+{
     [Authorize(Roles = "Jogador, Admin")]
     [ApiController]
     [Route("[Controller]")]
@@ -21,7 +21,7 @@ namespace RpgApi.Controllers
         private readonly DataContext _context;
         private readonly IHttpContextAccessor _httpContextoAccessor; //using Microsoft.AspNetCore.Http;
 
-       public PersonagensController(DataContext context, IHttpContextAccessor httpContextAccessor)
+        public PersonagensController(DataContext context, IHttpContextAccessor httpContextAccessor)
         {
             _context = context; //inicialização do atributo
             _httpContextoAccessor = httpContextAccessor;
@@ -36,7 +36,7 @@ namespace RpgApi.Controllers
                     .Include(ar => ar.Arma)
                     .Include(us => us.Usuario)
                     .Include(ph => ph.PersonagemHabilidades)
-                        .ThenInclude(h => h.Habilidade)                    
+                        .ThenInclude(h => h.Habilidade)
                     .FirstOrDefaultAsync(pBusca => pBusca.Id == id);
 
                 return Ok(p);
@@ -71,7 +71,7 @@ namespace RpgApi.Controllers
                 if (novoPersonagem.PontosVida > 100)
                 {
                     throw new System.Exception("Pontos de vida não pode ser maior que 100");
-                }                
+                }
 
                 novoPersonagem.Usuario = _context.Usuarios.FirstOrDefault(uBusca => uBusca.Id == ObterUsuarioId());
 
@@ -95,7 +95,7 @@ namespace RpgApi.Controllers
                 if (novoPersonagem.PontosVida > 100)
                 {
                     throw new System.Exception("Pontos de vida não pode ser maior que 100");
-                }                
+                }
 
                 _context.Personagens.Update(novoPersonagem);
                 int linhaAfetadas = await _context.SaveChangesAsync();
@@ -113,8 +113,8 @@ namespace RpgApi.Controllers
         {
             try
             {
-                 Personagem pRemover = await _context.Personagens
-                    .FirstOrDefaultAsync(p => p.Id == id);
+                Personagem pRemover = await _context.Personagens
+                   .FirstOrDefaultAsync(p => p.Id == id);
 
                 _context.Personagens.Remove(pRemover);
                 int linhaAfetadas = await _context.SaveChangesAsync();
@@ -123,7 +123,7 @@ namespace RpgApi.Controllers
             }
             catch (System.Exception ex)
             {
-                return BadRequest(ex.Message);                
+                return BadRequest(ex.Message);
             }
         }
 
@@ -133,7 +133,7 @@ namespace RpgApi.Controllers
             try
             {
                 int id = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value);
-                
+
                 List<Personagem> lista = await _context.Personagens
                             .Where(u => u.Usuario.Id == id)
                             .ToListAsync();
@@ -153,7 +153,7 @@ namespace RpgApi.Controllers
             {
                 List<Personagem> lista = new List<Personagem>();
 
-                if(ObterPerfilUsuario() == "Admin")
+                if (ObterPerfilUsuario() == "Admin")
                     lista = await _context.Personagens.ToListAsync();
                 else
                 {
@@ -170,7 +170,7 @@ namespace RpgApi.Controllers
 
         private int ObterUsuarioId()
         {
-            return int.Parse(_httpContextoAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));            
+            return int.Parse(_httpContextoAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
         }
 
         private string ObterPerfilUsuario()
@@ -178,7 +178,47 @@ namespace RpgApi.Controllers
             return _httpContextoAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Role);
         }
 
+        [HttpPut("RestaurarPontosVida")]
+        public async Task<IActionResult> RestaurarPontosVidaAsync(Personagem p)
+        {
+            try
+            {
+                int linhasAfetadas = 0;
+                Personagem pEncontrado =
+                await _context.Personagens.FirstOrDefaultAsync(pBusca => pBusca.Id == p.Id); pEncontrado.PontosVida = 100;
+                bool atualizou = await TryUpdateModelAsync<Personagem>(pEncontrado, "p", pAtualizar => pAtualizar.PontosVida);
+                // EF vai detectar e atualizar apenas as colunas que foram alteradas.
+                if (atualizou)
+                    linhasAfetadas = await _context.SaveChangesAsync();
 
+                return Ok(linhasAfetadas);
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut("AtualizarFoto")]
+        public async Task<IActionResult> AtualizarFoto(Personagem p)
+        {
+            try
+            {
+                Personagem personagem = await _context.Personagens
+                    .FirstOrDefaultAsync(x => x.Id == p.Id);
+                personagem.FotoPersonagem = p.FotoPersonagem;
+                var attach = _context.Attach(personagem);
+                attach.Property(x => x.Id).IsModified = false;
+                attach.Property(x => x.FotoPersonagem).IsModified = true;
+                int linhasAfetadas = await _context.SaveChangesAsync();
+                return Ok(linhasAfetadas);
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        
 
     }//Fim da classe do tipo controller
 }
