@@ -218,6 +218,34 @@ namespace RpgApi.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpPut("Zerar Ranking")]
+        public async Task<IActionResult> ZerarRankingAsync(Personagem p)
+        {
+            try
+            {
+                Personagem pEncontrado = await _context.Personagens.FirstOrDefaultAsync(pBusca => pBusca == p.Id);
+
+                pEncontrado.Disputas = 0;
+                pEncontrado.Vitorias = 0;
+                pEncontrado.Derrotas = 0;
+                int linhasAfetadas = 0;
+
+                bool atualizou - await TryUpdateModelAsync<Personagem>(pEncontrado, "p",
+                    pAtualizar => pAtualizar.Disputas,
+                    pAtualizar => pAtualizar.Vitorias,
+                    pAtualizar => pAtualizar.Derrotas);
+
+                if (atualizou)
+                    linhaAfetadas = await _context.SaveChangesAsync();
+
+                return Ok(linhasAfetadas);
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
         
 
     }//Fim da classe do tipo controller
