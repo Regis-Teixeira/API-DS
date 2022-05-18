@@ -246,6 +246,27 @@ namespace RpgApi.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpPut("ZerarRankingRestaurarVidas")]
+        public async Task<IActionResult> ZerarRankingRestaurarAsync()
+        {
+            try
+            {
+                List<Personagem> lista =
+                await _context.Personagens.ToListAsync();
+
+                foreach (Personagem p in lista)
+                {
+                    await ZerarRankingAsync(p);
+                    await RestaurarPontosVidaAsync(p);
+                }
+                return Ok();
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
         
 
     }//Fim da classe do tipo controller

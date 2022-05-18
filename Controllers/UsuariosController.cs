@@ -163,8 +163,109 @@ namespace RpgApi.Controllers
             return tokenHandler.WriteToken(token);
         }
         
+        [HttpGet("{usuarioId}")]
+        public async Task<IActionResult> GetUsuario(int usuarioId)
+        {
+            try
+            {
+                Usuario usuario = await _context.Usuarios
+                    .FirstOrDefaultAsync(x => x.Id == usuarioId);
+                
+                return Ok(usuario);
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }   
 
+        [HttpGet("GetByLogin/(login)")]
+        public async Task<IActionResult> GetUsuarios(string login)
+        {
+            try
+            {
+                
+                Usuario usuario = await _context.Usuarios
+                 .FirstOrDefaultAsync(x => x.Username.ToLower() == login.ToLower());
+                
+                return Ok(usuario);
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
 
+        [HttpPut("AtualizarLocalizacao")]
+        public async Task<IActionResult> AtualizarLocalizacao(Usuario u)
+        {
+            try
+            {
+                Usuario usuario = await _context.Usuarios
+                    .FirstOrDefaultAsync (x => x.Id == u.Id);
+                
+                usuario.Latitude = u.Latitude;
+                usuario.Longitude = u.Longitude;
+
+                var attach = _context.Attach(usuario);
+                attach.Property(x => x.Id) .IsModified = true;
+                attach.Property(x => x.Latitude) .IsModified = true;
+                attach.Property(x => x.Longitude) .IsModified = true;
+                    
+                int linhaAfetadas = await _context.SaveChangesAsync();
+                return Ok(linhaAfetadas);
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut("AtualizarEmail")]
+        public async Task<IActionResult> AtualizarEmail(Usuario u)
+        {
+            try
+            {
+                Usuario usuario = await _context.Usuarios
+                    .FirstOrDefaultAsync (x => x.Id == u.Id);
+                
+                usuario.Email = u.Email;
+                
+                var attach = _context.Attach(usuario);
+                attach.Property(x => x.Id) .IsModified = true;
+                attach.Property(x => x.Email) .IsModified = true;
+                                    
+                int linhaAfetadas = await _context.SaveChangesAsync();
+                return Ok(linhaAfetadas);
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut("AtualizarFoto")]
+        public async Task<IActionResult> AtualizarFoto(Usuario u)
+        {
+            try
+            {
+                Usuario usuario = await _context.Usuarios
+                    .FirstOrDefaultAsync (x => x.Id == u.Id);
+                
+                usuario.Foto = u.Foto;
+                
+                var attach = _context.Attach(usuario);
+                attach.Property(x => x.Id) .IsModified = true;
+                attach.Property(x => x.Foto) .IsModified = true;
+                                    
+                int linhaAfetadas = await _context.SaveChangesAsync();
+                return Ok(linhaAfetadas);
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
 
     }
 }

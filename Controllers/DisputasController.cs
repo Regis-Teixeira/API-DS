@@ -79,7 +79,9 @@ namespace RpgApi.Controllers
 
                 PersonagemHabilidade ph = await _context.PersonagemHabilidades
                     .Include(ph => ph.Habilidade)
-                    .FirstOrDefaultAsync(phBusca => phBusca.HabilidadeId == d.HabilidadeId);
+                    .FirstOrDefaultAsync(phBusca => phBusca.HabilidadeId == d.HabilidadeId
+                        && phBusca.PersonagemId == d.AtacanteId);
+
                 if (ph == null)
                     d.Narracao = $"{atacante.Nome} não possui esta habilidade";
                 else
@@ -100,7 +102,7 @@ namespace RpgApi.Controllers
                     dados.AppendFormat($" Oponente: {oponente.Nome}");
                     dados.AppendFormat($" Pontos de vida do atacante: {atacante.PontosVida}");
                     dados.AppendFormat($" Pontos de vida do oponente: {oponente.PontosVida}");
-                    dados.AppendFormat($" Arma utilizada: {atacante.Arma.Nome}");
+                    dados.AppendFormat($" Habilidade utilizada: {ph.Habilidade.Nome");
                     dados.AppendFormat($" Dano: {dano}");
 
                     d.Narracao += dados.ToString();
