@@ -178,6 +178,7 @@ namespace RpgApi.Controllers
             return _httpContextoAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Role);
         }
 
+        [AllowAnonymous]
         [HttpPut("RestaurarPontosVida")]
         public async Task<IActionResult> RestaurarPontosVidaAsync(Personagem p)
         {
@@ -224,20 +225,21 @@ namespace RpgApi.Controllers
         {
             try
             {
-                Personagem pEncontrado = await _context.Personagens.FirstOrDefaultAsync(pBusca => pBusca == p.Id);
+                Personagem pEncontrado = 
+                    await _context.Personagens.FirstOrDefaultAsync(pBusca => pBusca.Id == p.Id);
 
                 pEncontrado.Disputas = 0;
                 pEncontrado.Vitorias = 0;
                 pEncontrado.Derrotas = 0;
                 int linhasAfetadas = 0;
 
-                bool atualizou - await TryUpdateModelAsync<Personagem>(pEncontrado, "p",
+                bool atualizou = await TryUpdateModelAsync<Personagem>(pEncontrado, "p",
                     pAtualizar => pAtualizar.Disputas,
                     pAtualizar => pAtualizar.Vitorias,
                     pAtualizar => pAtualizar.Derrotas);
 
                 if (atualizou)
-                    linhaAfetadas = await _context.SaveChangesAsync();
+                    linhasAfetadas = await _context.SaveChangesAsync();
 
                 return Ok(linhasAfetadas);
             }

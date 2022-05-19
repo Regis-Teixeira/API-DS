@@ -61,7 +61,7 @@ namespace RpgApi.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpPost("AdicionarArma")]
         public async Task<IActionResult> Add(Arma novaArma)
         {
             try

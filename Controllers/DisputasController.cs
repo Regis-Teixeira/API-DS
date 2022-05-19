@@ -102,7 +102,7 @@ namespace RpgApi.Controllers
                     dados.AppendFormat($" Oponente: {oponente.Nome}");
                     dados.AppendFormat($" Pontos de vida do atacante: {atacante.PontosVida}");
                     dados.AppendFormat($" Pontos de vida do oponente: {oponente.PontosVida}");
-                    dados.AppendFormat($" Habilidade utilizada: {ph.Habilidade.Nome");
+                    dados.AppendFormat($" Habilidade utilizada: {ph.Habilidade.Nome}");
                     dados.AppendFormat($" Dano: {dano}");
 
                     d.Narracao += dados.ToString();
